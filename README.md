@@ -20,6 +20,10 @@ Nesse desafio desenvolveremos uma API para a adoção de animais, a FindAFriend 
 - [ ] Todos os filtros, além da cidade, são opcionais
 - [ ] Para uma ORG acessar a aplicação como admin, ela precisa estar logada
 
+## Tabelas
+
+![](./prisma/ERD.svg)
+
 ## Layout
 
 Clique no link para acessar o layout no Figma: [clique aqui](https://www.figma.com/community/file/1220006040435238030)
