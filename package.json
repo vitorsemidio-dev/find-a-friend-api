@@ -1,0 +1,30 @@
+{
+  "name": "find-a-friend-api",
+  "version": "1.0.0",
+  "description": "Nesse desafio desenvolveremos uma API para a adoção de animais, a FindAFriend API, utilizando SOLID e testes.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Vitor Emídio",
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "build": "tsup src --out-dir build",
+    "start": "node build/server.js",
+    "start:dev": "tsx watch src/server.ts"
+  },
+  "devDependencies": {
+    "@rocketseat/eslint-config": "1.2.0",
+    "@types/node": "18.15.11",
+    "eslint": "8.37.0",
+    "tsup": "6.7.0",
+    "tsx": "3.12.6",
+    "typescript": "5.0.3"
+  },
+  "dependencies": {
+    "dotenv": "16.0.3",
+    "fastify": "4.15.0",
+    "zod": "3.21.4"
+  }
+}
