@@ -12,6 +12,8 @@ const createOrgBodySchema = z.object({
   password: z.string(),
 })
 
+export type CreateOrgBodySchema = z.infer<typeof createOrgBodySchema>
+
 export async function createOrgController(
   request: FastifyRequest,
   reply: FastifyReply,
