@@ -1,5 +1,5 @@
+import { FindManyParams, PetsRepository } from '@/repositories/pets.repository'
 import { Pet, Prisma } from '@prisma/client'
-import { FindManyParams, PetsRepository } from '../pets.repository'
 import { randomUUID } from 'crypto'
 
 export class InMemoryPetsRepository implements PetsRepository {
@@ -8,7 +8,7 @@ export class InMemoryPetsRepository implements PetsRepository {
   async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
     const pet = {
       ...data,
-      id: randomUUID() || data.id,
+      id: data.id || randomUUID(),
     } as Pet
 
     this.pets.push(pet)

@@ -1,5 +1,5 @@
+import { AdoptionRequirementsRepository } from '@/repositories/adoption-requirements.repository'
 import { AdoptionRequirements, Prisma } from '@prisma/client'
-import { AdoptionRequirementsRepository } from '../adoption-requirements.repository'
 import { randomUUID } from 'crypto'
 
 export class InMemoryAdoptionRequirementsRepository
@@ -12,7 +12,7 @@ export class InMemoryAdoptionRequirementsRepository
   ): Promise<AdoptionRequirements[]> {
     const adoptionRequirements = data.map((adoptionRequirement) => ({
       ...adoptionRequirement,
-      id: randomUUID() || adoptionRequirement.id,
+      id: adoptionRequirement.id || randomUUID(),
     }))
 
     this.adoptionRequirements.push(...adoptionRequirements)

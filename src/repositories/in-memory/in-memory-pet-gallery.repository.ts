@@ -1,5 +1,5 @@
-import { Prisma, PetGallery } from '@prisma/client'
-import { PetGalleryRepository } from '../pet-gallery.repository'
+import { PetGalleryRepository } from '@/repositories/pet-gallery.repository'
+import { PetGallery, Prisma } from '@prisma/client'
 import { randomUUID } from 'crypto'
 
 export class InMemoryPetGalleryRepository implements PetGalleryRepository {
@@ -10,7 +10,7 @@ export class InMemoryPetGalleryRepository implements PetGalleryRepository {
   ): Promise<PetGallery> {
     const petGallery = {
       ...data,
-      id: randomUUID() || data.id,
+      id: data.id || randomUUID(),
     } as PetGallery
 
     this.petGallery.push(petGallery)
@@ -23,7 +23,7 @@ export class InMemoryPetGalleryRepository implements PetGalleryRepository {
   ): Promise<PetGallery[]> {
     const petGallery = data.map((item) => ({
       ...item,
-      id: randomUUID(),
+      id: item.id || randomUUID(),
     })) as PetGallery[]
 
     this.petGallery.push(...petGallery)
