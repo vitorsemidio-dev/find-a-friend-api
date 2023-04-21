@@ -1,5 +1,6 @@
 import { HashProvider } from '@/providers/hash.provider'
 import { OrgsRepository } from '@/repositories/orgs.repository'
+import { Org } from '@prisma/client'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 
 type AuthenticateUseCaseInput = {
@@ -7,7 +8,9 @@ type AuthenticateUseCaseInput = {
   password: string
 }
 
-type AuthenticateUseCaseOutput = {}
+type AuthenticateUseCaseOutput = {
+  org: Org
+}
 
 export class AuthenticateUseCase {
   constructor(
@@ -33,6 +36,8 @@ export class AuthenticateUseCase {
       throw new InvalidCredentialsError()
     }
 
-    return {}
+    return {
+      org,
+    }
   }
 }

@@ -16,6 +16,27 @@ describe('AuthenticateUseCase', () => {
     sut = new AuthenticateUseCase(orgsRepository, hashProvider)
   })
 
+  it('should return org if credentials are valid', async () => {
+    const input = makeOrgModel({
+      email: 'org-email@email.com',
+      password: '123456',
+    })
+
+    const orgCreated = await orgsRepository.create(
+      makeOrgModel({
+        email: input.email,
+        password: await hashProvider.generateHash(input.password),
+      }),
+    )
+
+    const output = await sut.execute(input)
+
+    expect(output.org).toMatchObject({
+      id: orgCreated.id,
+      email: input.email,
+    })
+  })
+
   it('should throw InvalidCredentialsError if org does not exist', async () => {
     const input = {
       email: 'non-existing-org@email.com',
