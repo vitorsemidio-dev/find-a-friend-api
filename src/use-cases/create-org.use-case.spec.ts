@@ -1,9 +1,9 @@
-import { OrgAlreadyExistsError } from './errors/org-already-exists.error'
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs.repository'
-import { makeOrgModel } from '@/test/factories/make-org-model'
+import { CreateOrgUseCase } from '@/use-cases/create-org.use-case'
+import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists.error'
+import { makeOrgModel } from '@/use-cases/test/factories/make-org-model'
+import { TestHashProvider } from '@/use-cases/test/providers/test-hash.provider'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { CreateOrgUseCase } from './create-org.use-case'
-import { TestHashProvider } from '@/test/providers/test-hash.provider'
 
 describe('CreateOrgUseCase', () => {
   let sut: CreateOrgUseCase

@@ -1,7 +1,7 @@
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets.repository'
-import { makePetModel } from '@/test/factories/make-pet-model'
+import { ListPetsByCityUseCase } from '@/use-cases/list-pets-by-city.use-case'
+import { makePetModel } from '@/use-cases/test/factories/make-pet-model'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ListPetsByCityUseCase } from './list-pets-by-city.use-case'
 
 describe('ListPetsByCityUseCase', () => {
   let sut: ListPetsByCityUseCase

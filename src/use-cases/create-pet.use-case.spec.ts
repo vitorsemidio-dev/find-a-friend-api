@@ -2,6 +2,10 @@ import { InMemoryAdoptionRequirementsRepository } from '@/repositories/in-memory
 import { InMemoryPetGalleryRepository } from '@/repositories/in-memory/in-memory-pet-gallery.repository'
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets.repository'
 import {
+  CreatePetUseCase,
+  CreatePetUseCaseInput,
+} from '@/use-cases/create-pet.use-case'
+import {
   Age,
   Energy,
   Environment,
@@ -11,7 +15,6 @@ import {
   Type,
 } from '@prisma/client'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { CreatePetUseCase, CreatePetUseCaseInput } from './create-pet.use-case'
 
 const makeSutInput = (
   override: Partial<CreatePetUseCaseInput> = {},

@@ -1,9 +1,9 @@
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs.repository'
-import { makeOrgModel } from '@/test/factories/make-org-model'
-import { TestHashProvider } from '@/test/providers/test-hash.provider'
+import { AuthenticateUseCase } from '@/use-cases/authenticate.use-case'
+import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials.error'
+import { makeOrgModel } from '@/use-cases/test/factories/make-org-model'
+import { TestHashProvider } from '@/use-cases/test/providers/test-hash.provider'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { AuthenticateUseCase } from './authenticate.use-case'
-import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 
 describe('AuthenticateUseCase', () => {
   let sut: AuthenticateUseCase

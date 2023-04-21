@@ -1,7 +1,7 @@
 import { HashProvider } from '@/providers/hash.provider'
 import { OrgsRepository } from '@/repositories/orgs.repository'
+import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials.error'
 import { Org } from '@prisma/client'
-import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 
 type AuthenticateUseCaseInput = {
   email: string

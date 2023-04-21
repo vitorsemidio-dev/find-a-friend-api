@@ -1,7 +1,7 @@
-import { OrgsRepository } from '@/repositories/orgs.repository'
-import { Org, Prisma } from '@prisma/client'
-import { OrgAlreadyExistsError } from './errors/org-already-exists.error'
 import { HashProvider } from '@/providers/hash.provider'
+import { OrgsRepository } from '@/repositories/orgs.repository'
+import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists.error'
+import { Org, Prisma } from '@prisma/client'
 
 type CreateOrgUseCaseInput = Prisma.OrgUncheckedCreateInput
 

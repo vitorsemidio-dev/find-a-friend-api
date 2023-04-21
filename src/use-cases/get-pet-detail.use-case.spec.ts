@@ -1,8 +1,8 @@
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets.repository'
-import { makePetModel } from '@/test/factories/make-pet-model'
+import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found.error'
+import { GetPetDetailUseCase } from '@/use-cases/get-pet-detail.use-case'
+import { makePetModel } from '@/use-cases/test/factories/make-pet-model'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { GetPetDetailUseCase } from './get-pet-detail.use-case'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
 
 describe('GetPetDetailUseCase', () => {
   let sut: GetPetDetailUseCase
