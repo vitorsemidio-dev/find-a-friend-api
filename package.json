@@ -24,7 +24,9 @@
     "pretest:e2e:watch": "npm run pretest:e2e",
     "test:e2e": "vitest run --dir src/controllers",
     "test:e2e:watch": "vitest --dir src/controllers",
-    "test": "vitest"
+    "test:unit": "vitest run --dir src/use-cases",
+    "test:unit:watch": "vitest --dir src/use-cases",
+    "test:ui": "vitest --ui"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^9.1.7",
