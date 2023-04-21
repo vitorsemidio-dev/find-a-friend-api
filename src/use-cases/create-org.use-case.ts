@@ -1,6 +1,7 @@
 import { OrgsRepository } from '@/repositories/orgs.repository'
 import { Org, Prisma } from '@prisma/client'
 import { OrgAlreadyExistsError } from './errors/org-already-exists.error'
+import { HashProvider } from '@/providers/hash.provider'
 
 type CreateOrgUseCaseInput = Prisma.OrgUncheckedCreateInput
 
@@ -9,7 +10,10 @@ type CreateOrgUseCaseOutput = {
 }
 
 export class CreateOrgUseCase {
-  constructor(private readonly orgsRepository: OrgsRepository) {}
+  constructor(
+    private readonly orgsRepository: OrgsRepository,
+    private readonly hashProvider: HashProvider,
+  ) {}
 
   async execute({
     name,
@@ -25,13 +29,15 @@ export class CreateOrgUseCase {
       throw new OrgAlreadyExistsError()
     }
 
+    const hashedPassword = await this.hashProvider.generateHash(password)
+
     const org = await this.orgsRepository.create({
       name,
       email,
       address,
       cep,
       whatsappNumber,
-      password,
+      password: hashedPassword,
     })
 
     return {
