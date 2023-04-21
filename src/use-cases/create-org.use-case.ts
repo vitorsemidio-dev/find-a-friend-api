@@ -1,5 +1,6 @@
 import { OrgsRepository } from '@/repositories/orgs.repository'
-import { Prisma, Org } from '@prisma/client'
+import { Org, Prisma } from '@prisma/client'
+import { OrgAlreadyExistsError } from './errors/org-already-exists.error'
 
 type CreateOrgUseCaseInput = Prisma.OrgUncheckedCreateInput
 
@@ -18,6 +19,12 @@ export class CreateOrgUseCase {
     whatsappNumber,
     password,
   }: CreateOrgUseCaseInput): Promise<CreateOrgUseCaseOutput> {
+    const orgExists = await this.orgsRepository.findByEmail(email)
+
+    if (orgExists) {
+      throw new OrgAlreadyExistsError()
+    }
+
     const org = await this.orgsRepository.create({
       name,
       email,
