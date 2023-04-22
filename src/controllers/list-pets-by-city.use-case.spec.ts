@@ -3,7 +3,7 @@ import { buildRequestCreatePet } from '@/controllers/test/factories/build-reques
 import { makeCreateOrgBodySchema } from '@/controllers/test/factories/make-create-org-body-schema'
 import { MakeCreatePetBodySchemaParams } from '@/controllers/test/factories/make-create-pet-body-schema'
 import { prisma } from '@/lib/prisma'
-import { Age, Energy, Environment } from '@prisma/client'
+import { Age, Energy, Environment, Gender } from '@prisma/client'
 import request from 'supertest'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
@@ -160,7 +160,7 @@ describe('ListPetsByCityUseCase', () => {
       const city = 'São Paulo'
       const energy = Energy.high
       const response = await request(app.server).get(`/pets/${city}`).query({
-        energy: energy,
+        energy,
       })
 
       expect(response.status).toBe(200)
@@ -185,7 +185,7 @@ describe('ListPetsByCityUseCase', () => {
       const city = 'Minas Gerais'
       const energy = Energy.low
       const response = await request(app.server).get(`/pets/${city}`).query({
-        energy: energy,
+        energy,
       })
 
       expect(response.status).toBe(200)
@@ -258,10 +258,69 @@ describe('ListPetsByCityUseCase', () => {
     })
   })
 
-  it.todo(
-    'should return list of pets by city and filter by gender',
-    async () => {},
-  )
+  describe('List pets by city and filter by gender', () => {
+    beforeEach(async () => {
+      await app.ready()
+
+      await makeRequestCreatePet({
+        name: `Pet01 Gender ${Gender.male}`,
+        gender: Gender.male,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet02 Gender ${Gender.male}`,
+        gender: Gender.male,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet03 Gender ${Gender.female}`,
+        gender: Gender.female,
+        city: 'Rio de Janeiro',
+      })
+      await makeRequestCreatePet({
+        name: `Pet04 Gender ${Gender.male}`,
+        gender: Gender.male,
+        city: 'Minas Gerais',
+      })
+    })
+
+    it('should return list of pets by city and filter by gender', async () => {
+      const city = 'São Paulo'
+      const gender = Gender.male
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        gender,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(2)
+      expect(response.body.pets).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: `Pet02 Gender ${gender}`,
+            city,
+            gender,
+          }),
+          expect.objectContaining({
+            name: `Pet01 Gender ${gender}`,
+            city,
+            gender,
+          }),
+        ]),
+      )
+    })
+
+    it('should return empty list when not found pets', async () => {
+      const city = 'Minas Gerais'
+      const gender = Gender.female
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        gender,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(0)
+      expect(response.body.pets).toEqual([])
+    })
+  })
 
   it.todo(
     'should return list of pets by city and filter by independence',
