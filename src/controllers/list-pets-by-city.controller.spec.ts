@@ -3,7 +3,7 @@ import { buildRequestCreatePet } from '@/controllers/test/factories/build-reques
 import { makeCreateOrgBodySchema } from '@/controllers/test/factories/make-create-org-body-schema'
 import { MakeCreatePetBodySchemaParams } from '@/controllers/test/factories/make-create-pet-body-schema'
 import { prisma } from '@/lib/prisma'
-import { Age, Energy, Environment, Gender } from '@prisma/client'
+import { Age, Energy, Environment, Gender, Independence } from '@prisma/client'
 import request from 'supertest'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
@@ -322,10 +322,69 @@ describe('ListPetsByCityUseCase', () => {
     })
   })
 
-  it.todo(
-    'should return list of pets by city and filter by independence',
-    async () => {},
-  )
+  describe('List pets by city and filter by independence', () => {
+    beforeEach(async () => {
+      await app.ready()
+
+      await makeRequestCreatePet({
+        name: `Pet01 Independence ${Independence.high}`,
+        independence: Independence.high,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet02 Independence ${Independence.high}`,
+        independence: Independence.high,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet03 Independence ${Independence.low}`,
+        independence: Independence.low,
+        city: 'Rio de Janeiro',
+      })
+      await makeRequestCreatePet({
+        name: `Pet04 Independence ${Independence.medium}`,
+        independence: Independence.medium,
+        city: 'Minas Gerais',
+      })
+    })
+
+    it('should return list of pets by city and filter by independence', async () => {
+      const city = 'São Paulo'
+      const independence = Independence.high
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        independence,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(2)
+      expect(response.body.pets).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: `Pet02 Independence ${independence}`,
+            city,
+            independence,
+          }),
+          expect.objectContaining({
+            name: `Pet01 Independence ${independence}`,
+            city,
+            independence,
+          }),
+        ]),
+      )
+    })
+
+    it('should return empty list when not found pets', async () => {
+      const city = 'Minas Gerais'
+      const independence = Independence.high
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        independence,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(0)
+      expect(response.body.pets).toEqual([])
+    })
+  })
 
   it.todo(
     'should return list of pets by city and filter by size',
