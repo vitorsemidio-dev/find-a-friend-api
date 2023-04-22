@@ -3,7 +3,7 @@ import { buildRequestCreatePet } from '@/controllers/test/factories/build-reques
 import { makeCreateOrgBodySchema } from '@/controllers/test/factories/make-create-org-body-schema'
 import { MakeCreatePetBodySchemaParams } from '@/controllers/test/factories/make-create-pet-body-schema'
 import { prisma } from '@/lib/prisma'
-import { Age, Energy } from '@prisma/client'
+import { Age, Energy, Environment } from '@prisma/client'
 import request from 'supertest'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
@@ -194,10 +194,69 @@ describe('ListPetsByCityUseCase', () => {
     })
   })
 
-  it.todo(
-    'should return list of pets by city and filter by environment',
-    async () => {},
-  )
+  describe('List pets by city and filter by environment', () => {
+    beforeEach(async () => {
+      await app.ready()
+
+      await makeRequestCreatePet({
+        name: `Pet01 Environment ${Environment.indoor}`,
+        environment: Environment.indoor,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet02 Environment ${Environment.indoor}`,
+        environment: Environment.indoor,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet03 Environment ${Environment.spacious}`,
+        environment: Environment.spacious,
+        city: 'Rio de Janeiro',
+      })
+      await makeRequestCreatePet({
+        name: `Pet04 Environment ${Environment.outdoor}`,
+        environment: Environment.outdoor,
+        city: 'Minas Gerais',
+      })
+    })
+
+    it('should return list of pets by city and filter by environment', async () => {
+      const city = 'São Paulo'
+      const environment = Environment.indoor
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        environment: environment,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(2)
+      expect(response.body.pets).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: `Pet02 Environment ${environment}`,
+            city,
+            environment,
+          }),
+          expect.objectContaining({
+            name: `Pet01 Environment ${environment}`,
+            city,
+            environment,
+          }),
+        ]),
+      )
+    })
+
+    it('should return empty list when not found pets', async () => {
+      const city = 'Rio de Janeiro'
+      const environment = Environment.indoor
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        environment,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(0)
+      expect(response.body.pets).toEqual([])
+    })
+  })
 
   it.todo(
     'should return list of pets by city and filter by gender',
