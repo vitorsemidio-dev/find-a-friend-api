@@ -522,8 +522,88 @@ describe('ListPetsByCityUseCase', () => {
     })
   })
 
-  it.todo(
-    'should return list of pets by city and filter by all filters',
-    async () => {},
-  )
+  describe('List pets by city and all filters', () => {
+    beforeEach(async () => {
+      await app.ready()
+
+      await makeRequestCreatePet({
+        name: `Pet01 All`,
+        age: Age.young,
+        energy: Energy.high,
+        environment: Environment.spacious,
+        gender: Gender.male,
+        independence: Independence.high,
+        size: Size.large,
+        type: Type.dog,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet02 All`,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet03 All`,
+        city: 'Rio de Janeiro',
+      })
+      await makeRequestCreatePet({
+        name: `Pet04 All`,
+        city: 'Minas Gerais',
+      })
+    })
+
+    it('should return list of pets by city and filter by all filters', async () => {
+      const city = 'São Paulo'
+      const filters = {
+        age: Age.young,
+        energy: Energy.high,
+        environment: Environment.spacious,
+        gender: Gender.male,
+        independence: Independence.high,
+        size: Size.large,
+        type: Type.dog,
+      }
+
+      const response = await request(app.server)
+        .get(`/pets/${city}`)
+        .query(filters)
+
+      expect(response.body.pets).toHaveLength(1)
+      expect(response.body.pets).toEqual([
+        expect.objectContaining({
+          city,
+          type: filters.type,
+          age: filters.age,
+          energy: filters.energy,
+          environment: filters.environment,
+          gender: filters.gender,
+          independence: filters.independence,
+          size: filters.size,
+          name: `Pet01 All`,
+        }),
+      ])
+    })
+
+    it('should return empty list when not found pets', async () => {
+      const city = 'Minas Gerais'
+      const filters = {
+        type: Type.cat,
+        age: Age.baby,
+        energy: Energy.veryLow,
+        environment: Environment.outdoor,
+        gender: Gender.female,
+        independence: Independence.low,
+        size: Size.small,
+      }
+
+      const response = await request(app.server)
+        .get(`/pets/${city}`)
+        .query(filters)
+
+      console.log({
+        empty: response.body,
+      })
+
+      expect(response.body.pets).toHaveLength(0)
+    })
+  })
 })
