@@ -1,7 +1,7 @@
 import { authenticate } from '@/controllers/authenticate.controller'
 import { createOrgController } from '@/controllers/create-org.controller'
 import { createPetController } from '@/controllers/create-pet.controller'
-import { listPetsByCityController } from '@/controllers/list-pets-by-city.use-case'
+import { listPetsByCityController } from '@/controllers/list-pets-by-city.controller'
 import { verifyJWT } from '@/middlewares/verifyJWT'
 import { FastifyInstance } from 'fastify'
 
