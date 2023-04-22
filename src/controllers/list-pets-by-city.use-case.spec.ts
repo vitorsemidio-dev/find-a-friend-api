@@ -2,36 +2,43 @@ import { app } from '@/app'
 import { buildRequestCreatePet } from '@/controllers/test/factories/build-request-create-pet'
 import { makeCreateOrgBodySchema } from '@/controllers/test/factories/make-create-org-body-schema'
 import { MakeCreatePetBodySchemaParams } from '@/controllers/test/factories/make-create-pet-body-schema'
+import { prisma } from '@/lib/prisma'
 import { Age } from '@prisma/client'
 import request from 'supertest'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('ListPetsByCityUseCase', () => {
+  let token: string
+  let makeRequestCreatePet: (
+    override?: MakeCreatePetBodySchemaParams,
+  ) => request.Test
+
   beforeEach(async () => {
     await app.ready()
-  })
-
-  describe('List pets by city', () => {
     const createOrgBodyRequest = makeCreateOrgBodySchema()
     const authenticateBodyRequest = {
       email: createOrgBodyRequest.email,
       password: createOrgBodyRequest.password,
     }
-    let token: string
-    let makeRequestCreatePet: (
-      override?: MakeCreatePetBodySchemaParams,
-    ) => request.Test
+    await request(app.server).post('/orgs').send(createOrgBodyRequest)
+    const authenticateResponse = await request(app.server)
+      .post('/authenticate')
+      .send(authenticateBodyRequest)
 
-    beforeAll(async () => {
+    token = authenticateResponse.body.token
+
+    makeRequestCreatePet = buildRequestCreatePet(app, token)
+  })
+
+  beforeEach(async () => {
+    await prisma.petGallery.deleteMany()
+    await prisma.adoptionRequirements.deleteMany()
+    await prisma.pet.deleteMany()
+  })
+
+  describe('List pets by city', () => {
+    beforeEach(async () => {
       await app.ready()
-      await request(app.server).post('/orgs').send(createOrgBodyRequest)
-      const authenticateResponse = await request(app.server)
-        .post('/authenticate')
-        .send(authenticateBodyRequest)
-
-      token = authenticateResponse.body.token
-
-      makeRequestCreatePet = buildRequestCreatePet(app, token)
       await makeRequestCreatePet({ name: 'Pet01 SP', city: 'São Paulo' })
       await makeRequestCreatePet({ name: 'Pet02 SP', city: 'São Paulo' })
       await makeRequestCreatePet({ name: 'Pet03 RJ', city: 'Rio de Janeiro' })
@@ -65,26 +72,8 @@ describe('ListPetsByCityUseCase', () => {
   })
 
   describe('List pets by city and filter by age', () => {
-    const createOrgBodyRequest = makeCreateOrgBodySchema()
-    const authenticateBodyRequest = {
-      email: createOrgBodyRequest.email,
-      password: createOrgBodyRequest.password,
-    }
-    let token: string
-    let makeRequestCreatePet: (
-      override?: MakeCreatePetBodySchemaParams,
-    ) => request.Test
-
-    beforeAll(async () => {
+    beforeEach(async () => {
       await app.ready()
-      await request(app.server).post('/orgs').send(createOrgBodyRequest)
-      const authenticateResponse = await request(app.server)
-        .post('/authenticate')
-        .send(authenticateBodyRequest)
-
-      token = authenticateResponse.body.token
-
-      makeRequestCreatePet = buildRequestCreatePet(app, token)
 
       await makeRequestCreatePet({
         name: `Pet ${Age.adult}`,
