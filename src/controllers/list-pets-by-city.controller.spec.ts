@@ -10,6 +10,7 @@ import {
   Gender,
   Independence,
   Size,
+  Type,
 } from '@prisma/client'
 import request from 'supertest'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
@@ -457,10 +458,69 @@ describe('ListPetsByCityUseCase', () => {
     })
   })
 
-  it.todo(
-    'should return list of pets by city and filter by type',
-    async () => {},
-  )
+  describe('List pets by city and filter by type', () => {
+    beforeEach(async () => {
+      await app.ready()
+
+      await makeRequestCreatePet({
+        name: `Pet01 Type ${Type.cat}`,
+        type: Type.cat,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet02 Type ${Type.cat}`,
+        type: Type.cat,
+        city: 'São Paulo',
+      })
+      await makeRequestCreatePet({
+        name: `Pet03 Type ${Type.dog}`,
+        type: Type.dog,
+        city: 'Rio de Janeiro',
+      })
+      await makeRequestCreatePet({
+        name: `Pet04 Type ${Type.cat}`,
+        type: Type.cat,
+        city: 'Minas Gerais',
+      })
+    })
+
+    it('should return list of pets by city and filter by type', async () => {
+      const city = 'São Paulo'
+      const type = Type.cat
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        type,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(2)
+      expect(response.body.pets).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: `Pet02 Type ${type}`,
+            city,
+            type,
+          }),
+          expect.objectContaining({
+            name: `Pet01 Type ${type}`,
+            city,
+            type,
+          }),
+        ]),
+      )
+    })
+
+    it('should return empty list when not found pets', async () => {
+      const city = 'Minas Gerais'
+      const type = Type.dog
+      const response = await request(app.server).get(`/pets/${city}`).query({
+        type,
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body.pets).toHaveLength(0)
+      expect(response.body.pets).toEqual([])
+    })
+  })
 
   it.todo(
     'should return list of pets by city and filter by all filters',
