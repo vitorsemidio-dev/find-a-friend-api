@@ -1,8 +1,11 @@
 import { CreatePetControllerInput } from '@/controllers/create-pet.controller'
 
+export type MakeCreatePetBodySchemaParams = Partial<CreatePetControllerInput>
+export type MakeCreatePetBodySchemaResult = CreatePetControllerInput
+
 export function makeCreatePetBodySchema(
-  override: Partial<CreatePetControllerInput> = {},
-): CreatePetControllerInput {
+  override: MakeCreatePetBodySchemaParams = {},
+): MakeCreatePetBodySchemaResult {
   return {
     name: 'pet 1',
     description: 'pet 1',
