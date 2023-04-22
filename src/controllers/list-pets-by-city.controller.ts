@@ -13,7 +13,15 @@ import { z } from 'zod'
 
 const listPetsByCityQuerySchema = z.object({
   age: z.enum([Age.adult, Age.baby, Age.senior, Age.young]).optional(),
-  energy: z.enum([Energy.high, Energy.low, Energy.medium]).optional(),
+  energy: z
+    .enum([
+      Energy.high,
+      Energy.low,
+      Energy.medium,
+      Energy.veryHigh,
+      Energy.veryLow,
+    ])
+    .optional(),
   environment: z
     .enum([Environment.indoor, Environment.outdoor, Environment.spacious])
     .optional(),

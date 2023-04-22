@@ -16,7 +16,13 @@ const createPetBodySchema = z.object({
   description: z.string(),
   city: z.string(),
   age: z.enum([Age.adult, Age.baby, Age.senior, Age.young]),
-  energy: z.enum([Energy.high, Energy.low, Energy.medium]),
+  energy: z.enum([
+    Energy.high,
+    Energy.low,
+    Energy.medium,
+    Energy.veryHigh,
+    Energy.veryLow,
+  ]),
   environment: z.enum([
     Environment.indoor,
     Environment.outdoor,
