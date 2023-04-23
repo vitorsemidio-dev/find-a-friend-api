@@ -10,7 +10,7 @@ export class DiskStorageFileStrategy implements StorageFileProvider {
 
     for (const image of images) {
       const newPath = image.path.replace('tmp', 'uploads')
-      // await fs.rename(image.path, newPath)
+      await fs.rename(image.path, newPath)
       paths.push(newPath)
     }
 

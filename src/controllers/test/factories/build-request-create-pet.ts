@@ -14,8 +14,6 @@ export const buildRequestCreatePet = (
     return request(appInstance.server)
       .post('/pets')
       .set('Authorization', `Bearer ${token}`)
-      .attach('images', 'tmp/img-01.png', 'vitest-file.png')
-      .attach('images', 'tmp/image-01.jpg', 'vitest-file.jpg')
       .field('name', requestBody.name)
       .field('description', requestBody.description)
       .field('city', requestBody.city)
@@ -30,5 +28,7 @@ export const buildRequestCreatePet = (
         'adoptionRequirements',
         JSON.stringify(requestBody.adoptionRequirements),
       )
+    // .attach('images', 'tmp/img-01.png', 'vitest-file.png')
+    // .attach('images', 'tmp/image-01.jpg', 'vitest-file.jpg')
   }
 }
