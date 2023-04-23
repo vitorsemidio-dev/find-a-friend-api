@@ -35,8 +35,8 @@ jobs:
             echo "Database is down!"
             exit 1
           fi
-
+      - run: echo "${{ secrets.ENV_FILE_TEST }}" > .env
       - run: npm run test:e2e
         env:
           JWT_SECRET: testing
-          DATABASE_URL: "postgresql://docker:docker@localhost:5432/findafriend?schema=public"
+          DATABASE_URL: 'postgresql://docker:docker@localhost:5432/findafriend?schema=public'
