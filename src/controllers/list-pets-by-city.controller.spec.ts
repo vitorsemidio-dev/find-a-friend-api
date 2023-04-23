@@ -599,10 +599,6 @@ describe('ListPetsByCityUseCase', () => {
         .get(`/pets/${city}`)
         .query(filters)
 
-      console.log({
-        empty: response.body,
-      })
-
       expect(response.body.pets).toHaveLength(0)
     })
   })

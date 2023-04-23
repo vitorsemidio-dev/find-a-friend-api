@@ -1,4 +1,5 @@
 import { makeCreatePetUseCase } from '@/use-cases/factories/make-create-pet.use-case'
+import { makeStorageFileUseCase } from '@/use-cases/factories/make-storage-file.use-case'
 import {
   Age,
   Energy,
@@ -37,7 +38,6 @@ const createPetBodySchema = z.object({
   size: z.enum([Size.large, Size.medium, Size.small]),
   type: z.enum([Type.cat, Type.dog]),
   adoptionRequirements: z.array(z.string()),
-  petGallery: z.array(z.string()),
 })
 
 export type CreatePetControllerInput = z.infer<typeof createPetBodySchema>
@@ -48,12 +48,21 @@ export async function createPetController(
 ) {
   try {
     const { sub: orgId } = request.user
-    const body = createPetBodySchema.parse(request.body)
+    const requestBody = request.body as Record<string, any>
+    requestBody.adoptionRequirements = JSON.parse(
+      requestBody.adoptionRequirements,
+    )
+    const storageFileUseCase = makeStorageFileUseCase()
+    const { paths } = await storageFileUseCase.execute(request.files)
+    const petGallery = paths
+    const body = createPetBodySchema.parse(requestBody)
     const createPetUseCase = makeCreatePetUseCase()
     await createPetUseCase.execute({
       ...body,
+      petGallery,
       orgId,
     })
+
     return reply.code(201).send()
   } catch (err) {
     throw err

@@ -4,6 +4,7 @@ import fastifyCookie from '@fastify/cookie'
 import cors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastify from 'fastify'
+import fastifyMulter from 'fastify-multer'
 import { ZodError } from 'zod'
 
 export const app = fastify()
@@ -25,6 +26,9 @@ app.register(fastifyJwt, {
     expiresIn: '10m',
   },
 })
+
+// Plugins - Fastify Multer
+app.register(fastifyMulter.contentParser)
 
 // Plugins - Cookie
 app.register(fastifyCookie)

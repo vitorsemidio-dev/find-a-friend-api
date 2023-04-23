@@ -32,7 +32,22 @@ describe('CreatePetController', () => {
       const response = await request(app.server)
         .post('/pets')
         .set('Authorization', `Bearer ${token}`)
-        .send(bodyRequest)
+        .attach('images', 'tmp/img-01.png', 'vitest-file.png')
+        .attach('images', 'tmp/image-01.jpg', 'vitest-file.jpg')
+        .field('name', bodyRequest.name)
+        .field('description', bodyRequest.description)
+        .field('city', bodyRequest.city)
+        .field('age', bodyRequest.age)
+        .field('energy', bodyRequest.energy)
+        .field('environment', bodyRequest.environment)
+        .field('gender', bodyRequest.gender)
+        .field('independence', bodyRequest.independence)
+        .field('size', bodyRequest.size)
+        .field('type', bodyRequest.type)
+        .field(
+          'adoptionRequirements',
+          JSON.stringify(bodyRequest.adoptionRequirements),
+        )
 
       expect(response.status).toBe(201)
     })
