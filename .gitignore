@@ -12,7 +12,3 @@ tmp/*
 uploads/*
 !tmp/.gitkeep
 !uploads/.gitkeep
-!tmp/image-01.jpg
-!tmp/image-02.jpg
-!tmp/img-01.png
-!tmp/img-02.png

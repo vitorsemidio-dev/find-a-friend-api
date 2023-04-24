@@ -34,8 +34,8 @@ describe('CreatePetController', () => {
       const response = await request(app.server)
         .post('/pets')
         .set('Authorization', `Bearer ${token}`)
-        .attach('images', 'tmp/img-01.png', 'vitest-file.png')
-        .attach('images', 'tmp/image-01.jpg', 'vitest-file.jpg')
+        .attach('images', 'test/assets/img-01.png', 'vitest-file.png')
+        .attach('images', 'test/assets/image-01.jpg', 'vitest-file.jpg')
         .field('name', bodyRequest.name)
         .field('description', bodyRequest.description)
         .field('city', bodyRequest.city)
@@ -56,8 +56,8 @@ describe('CreatePetController', () => {
 
     it('[GITHUB_ACTIONS] should return 201 when pet is created', async () => {
       const bodyRequest = makeCreatePetBodySchema()
-      const buffer = await fsPromises.readFile('tmp/img-02.png')
-      const stream = fs.createReadStream('tmp/image-02.jpg')
+      const buffer = await fsPromises.readFile('test/assets/img-02.png')
+      const stream = fs.createReadStream('test/assets/image-02.jpg')
 
       const response = await request(app.server)
         .post('/pets')
