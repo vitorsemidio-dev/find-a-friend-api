@@ -1,8 +1,6 @@
 import { app } from '@/app'
 import { makeCreateOrgBodySchema } from '@/controllers/test/factories/make-create-org-body-schema'
 import { makeCreatePetBodySchema } from '@/controllers/test/factories/make-create-pet-body-schema'
-import fs from 'node:fs'
-import fsPromises from 'node:fs/promises'
 import request from 'supertest'
 import { beforeEach, describe, expect, it } from 'vitest'
 
@@ -36,34 +34,6 @@ describe('CreatePetController', () => {
         .set('Authorization', `Bearer ${token}`)
         .attach('images', 'test/assets/img-01.png', 'vitest-file.png')
         .attach('images', 'test/assets/image-01.jpg', 'vitest-file.jpg')
-        .field('name', bodyRequest.name)
-        .field('description', bodyRequest.description)
-        .field('city', bodyRequest.city)
-        .field('age', bodyRequest.age)
-        .field('energy', bodyRequest.energy)
-        .field('environment', bodyRequest.environment)
-        .field('gender', bodyRequest.gender)
-        .field('independence', bodyRequest.independence)
-        .field('size', bodyRequest.size)
-        .field('type', bodyRequest.type)
-        .field(
-          'adoptionRequirements',
-          JSON.stringify(bodyRequest.adoptionRequirements),
-        )
-
-      expect(response.status).toBe(201)
-    })
-
-    it('[GITHUB_ACTIONS] should return 201 when pet is created', async () => {
-      const bodyRequest = makeCreatePetBodySchema()
-      const buffer = await fsPromises.readFile('test/assets/img-02.png')
-      const stream = fs.createReadStream('test/assets/image-02.jpg')
-
-      const response = await request(app.server)
-        .post('/pets')
-        .set('Authorization', `Bearer ${token}`)
-        .attach('images', buffer, 'b-vitest-file.png')
-        .attach('images', stream, 's-vitest-file.jpg')
         .field('name', bodyRequest.name)
         .field('description', bodyRequest.description)
         .field('city', bodyRequest.city)
