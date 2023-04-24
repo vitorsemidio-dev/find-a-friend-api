@@ -4,14 +4,14 @@ import { Prisma } from '@prisma/client'
 
 export class PrismaPetsRepository implements PetsRepository {
   async create(data: Prisma.PetUncheckedCreateInput) {
-    const pet = prisma.pet.create({
+    const pet = await prisma.pet.create({
       data,
     })
     return pet
   }
 
   async findById(id: string) {
-    const pet = prisma.pet.findUnique({
+    const pet = await prisma.pet.findUnique({
       where: { id },
       include: {
         adoptionRequirements: true,
@@ -32,7 +32,7 @@ export class PrismaPetsRepository implements PetsRepository {
   }
 
   async findMany(params: FindManyParams) {
-    const pets = prisma.pet.findMany({
+    const pets = await prisma.pet.findMany({
       where: params,
     })
     return pets
