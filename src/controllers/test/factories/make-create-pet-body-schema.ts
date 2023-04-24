@@ -18,7 +18,6 @@ export function makeCreatePetBodySchema(
     size: 'small',
     type: 'dog',
     adoptionRequirements: ['Requisito A', 'Requisito B', 'Requisito C'],
-    petGallery: ['imagem A', 'imagem B', 'imagem C'],
     ...override,
   }
 }

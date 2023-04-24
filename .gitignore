@@ -6,3 +6,9 @@ build/
 
 # Prisma
 prisma/migrations/migration_lock.toml
+
+# Temporary files
+tmp/*
+uploads/*
+!tmp/.gitkeep
+!uploads/.gitkeep

@@ -10,17 +10,20 @@
     "node": "18.x"
   },
   "scripts": {
+    "build": "tsup src --out-dir build",
     "db:migrate-dev": "prisma migrate dev",
     "db:migrate-reset": "prisma migrate reset",
     "db:migrate-deploy": "prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:open": "prisma studio",
-    "build": "tsup src --out-dir build",
+    "remove-files:tmp-folder": "find ./tmp ! -name \".gitkeep\" -type f -delete",
+    "remove-files:uploads-folder": "find ./uploads ! -name \".gitkeep\" -type f -delete",
     "start": "node build/server.js",
     "start:dev": "tsx watch src/server.ts",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
     "pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
+    "posttest:e2e": "run-s remove-files:tmp-folder remove-files:uploads-folder",
     "pretest:e2e:watch": "npm run pretest:e2e",
     "test:e2e": "vitest run --dir src/controllers",
     "test:e2e:watch": "vitest --dir src/controllers",
@@ -50,10 +53,14 @@
     "@fastify/cookie": "8.3.0",
     "@fastify/cors": "8.2.1",
     "@fastify/jwt": "6.7.1",
+    "@fastify/multipart": "7.6.0",
     "@prisma/client": "4.12.0",
+    "@supabase/supabase-js": "2.21.0",
     "bcryptjs": "2.4.3",
     "dotenv": "16.0.3",
     "fastify": "4.15.0",
+    "fastify-multer": "2.0.3",
+    "mime": "3.0.0",
     "zod": "3.21.4"
   }
 }
