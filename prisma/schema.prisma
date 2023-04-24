@@ -79,7 +79,7 @@ model Pet {
   org   Org?    @relation(fields: [orgId], references: [id])
   orgId String?
 
-  pets PetGallery[]
+  petGallery PetGallery[]
 
   @@map("pets")
 }
