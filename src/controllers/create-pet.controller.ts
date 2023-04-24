@@ -53,8 +53,8 @@ export async function createPetController(
       requestBody.adoptionRequirements,
     )
     const storageFileUseCase = makeStorageFileUseCase()
-    // const { paths } = await storageFileUseCase.execute(request.files)
-    const petGallery = ['path/to/file.png']
+    const { paths } = await storageFileUseCase.execute(request.files)
+    const petGallery = paths
     const body = createPetBodySchema.parse(requestBody)
     const createPetUseCase = makeCreatePetUseCase()
     await createPetUseCase.execute({
