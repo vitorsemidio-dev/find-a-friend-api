@@ -1,6 +1,8 @@
 import { app } from '@/app'
 import { makeCreateOrgBodySchema } from '@/controllers/test/factories/make-create-org-body-schema'
 import { makeCreatePetBodySchema } from '@/controllers/test/factories/make-create-pet-body-schema'
+import fs from 'node:fs'
+import fsPromises from 'node:fs/promises'
 import request from 'supertest'
 import { beforeEach, describe, expect, it } from 'vitest'
 
@@ -54,12 +56,14 @@ describe('CreatePetController', () => {
 
     it('[GITHUB_ACTIONS] should return 201 when pet is created', async () => {
       const bodyRequest = makeCreatePetBodySchema()
+      const buffer = await fsPromises.readFile('tmp/img-02.png')
+      const stream = fs.createReadStream('tmp/image-02.jpg')
 
       const response = await request(app.server)
         .post('/pets')
         .set('Authorization', `Bearer ${token}`)
-        .attach('images', Buffer.from('image png'), 'vitest-file.png')
-        .attach('images', Buffer.from('image jpg'), 'vitest-file.jpg')
+        .attach('images', buffer, 'b-vitest-file.png')
+        .attach('images', stream, 's-vitest-file.jpg')
         .field('name', bodyRequest.name)
         .field('description', bodyRequest.description)
         .field('city', bodyRequest.city)
