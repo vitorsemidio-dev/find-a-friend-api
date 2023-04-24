@@ -57,13 +57,13 @@ export async function createPetController(
     const petGallery = paths
     const body = createPetBodySchema.parse(requestBody)
     const createPetUseCase = makeCreatePetUseCase()
-    await createPetUseCase.execute({
+    const { pet } = await createPetUseCase.execute({
       ...body,
       petGallery,
       orgId,
     })
 
-    return reply.code(201).send()
+    return reply.code(201).send({ pet })
   } catch (err) {
     throw err
   }
